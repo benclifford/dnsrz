@@ -14,7 +14,10 @@ netprefix = "200108b0007c0001"
 main = do
   hPutStrLn stderr "dnsrz (c)2012 CQX Limited"
   zones <- getArgs
-  mapM_ processZone zones
+  r <- mapM processZone zones
+  let rc = concat r
+  let rsorted = sortBy (\(_, a) -> \(_, b) -> a `compare` b) rc
+  outputRs rsorted
 
 processZone z = do
   let (zone, _:server) = span (\e -> e /= '@') z
@@ -24,8 +27,10 @@ processZone z = do
   let (Right aaaalist) = parseAAAAs fz
   let l2 = catMaybes aaaalist
   let l3 = map (\(a,b) -> (a, expandipv6 b)) l2
-  let l4 = map (\(name, Right addr) -> (name, addr)) l3
-  let l5 = filter (\(name, addr) -> netprefix `isPrefixOf` addr) l4
+  return $ map (\(name, Right addr) -> (name, addr)) l3
+
+outputRs rs = do
+  let l5 = filter (\(name, addr) -> netprefix `isPrefixOf` addr) rs
   mapM_ (\(name, addr) -> putStrLn $ (ptrFormat $ drop (length netprefix) addr) ++ " PTR " ++ name) l5
 
 ptrFormat s = intersperse '.' $ reverse s
