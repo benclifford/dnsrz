@@ -14,7 +14,7 @@ executables: ~/.cabal/bin/dnsrz
 Specify as many zone@server pairs as you want on the commandline. The
 servers must allow zone transfers for the zone in question.
 
-$ dnsrz hawaga.org.uk@dildano.hawaga.org.uk clifford.ac@malander.clifford.ac
+$ dnsrz hawaga.org.uk@dildano.hawaga.org.uk clifford.ac@malander.clifford.ac --prefix=200108b0007c0001
 dnsrz (c)2012 CQX Limited
 forward zone is hawaga.org.uk
 server is dildano.hawaga.org.uk

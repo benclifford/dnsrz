@@ -1,23 +1,30 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 import Control.Applicative
+import Control.Monad
 import Data.IP
 import Data.List
 import Data.Maybe
 import System.Environment
+import System.Exit
+import System.Console.GetOpt
 import System.IO
 import System.Process
 import qualified Text.ParserCombinators.Parsec as PS
 
-netprefix = "200108b0007c0001"
-
 main = do
   hPutStrLn stderr "dnsrz (c)2012 CQX Limited"
-  zones <- getArgs
+
+  (prefixl, zones, errs) <- (getOpt Permute commandlineOptions)  <$> getArgs
   r <- mapM processZone zones
+
+  when (length prefixl /= 1) $ do
+    hPutStrLn stderr "You must specify exactly one network prefix like this --prefix=200108b0007c0001"
+    exitWith $ ExitFailure 1
+
   let rc = concat r
   let rsorted = sortBy (\(_, a) -> \(_, b) -> a `compare` b) rc
-  outputRs rsorted
+  outputRs (head prefixl) rsorted
 
 processZone z = do
   let (zone, _:server) = span (\e -> e /= '@') z
@@ -29,7 +36,7 @@ processZone z = do
   let l3 = map (\(a,b) -> (a, expandipv6 b)) l2
   return $ map (\(name, Right addr) -> (name, addr)) l3
 
-outputRs rs = do
+outputRs netprefix rs = do
   let l5 = filter (\(name, addr) -> netprefix `isPrefixOf` addr) rs
   mapM_ (\(name, addr) -> putStrLn $ (ptrFormat $ drop (length netprefix) addr) ++ " PTR " ++ name) l5
 
@@ -95,4 +102,7 @@ contentLine = do
   rest <- many (PS.noneOf "\n")
   PS.char '\n'
   return $ if rrtype == "AAAA" then Just (domain,rest) else Nothing
+
+commandlineOptions :: [OptDescr String]
+commandlineOptions = [ Option "p" ["prefix"] (ReqArg id "") "Specify network prefix to filter records"]
 

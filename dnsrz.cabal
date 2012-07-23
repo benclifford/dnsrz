@@ -1,5 +1,5 @@
 Name: dnsrz
-Version: 0.1
+Version: 0.2
 Description: Generate an IPv6 reverse DNS zone given some forward zones
 License: BSD3
 Author: Ben Clifford <benc@cqx.ltd.uk>
