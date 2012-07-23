@@ -1,0 +1,33 @@
+To install:
+
+  You'll need haskell:   apt-get install haskell-platform
+
+Then:
+
+  cabal install
+
+will build and compile.
+
+You'll find the executable in the same place that cabal puts all its other
+executables: ~/.cabal/bin/dnsrz
+
+Specify as many zone@server pairs as you want on the commandline. The
+servers must allow zone transfers for the zone in question.
+
+$ dnsrz hawaga.org.uk@dildano.hawaga.org.uk clifford.ac@malander.clifford.ac
+dnsrz (c)2012 CQX Limited
+forward zone is hawaga.org.uk
+server is dildano.hawaga.org.uk
+forward zone is clifford.ac
+server is malander.clifford.ac
+3.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0 PTR clifford.ac.
+3.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0 PTR malander.clifford.ac.
+4.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0 PTR fecolith.clifford.ac.
+4.1.2.0.0.f.e.f.f.f.3.9.d.0.2.0 PTR pomade.clifford.ac.
+a.5.5.7.6.1.e.f.f.f.6.7.6.1.2.0 PTR dildano.hawaga.org.uk.
+0.a.0.c.b.a.e.f.f.f.3.6.1.2.2.0 PTR tenesmus.clifford.ac.
+7.2.f.0.1.9.e.f.f.f.b.4.5.2.2.0 PTR coprolith.clifford.ac.
+c.2.5.d.b.f.e.f.f.f.b.e.7.2.a.b PTR pygar.hawaga.org.uk.
+c.2.5.d.b.f.e.f.f.f.b.e.7.2.a.b PTR pygar-6.hawaga.org.uk.
+b.6.5.8.2.f.e.f.f.f.8.c.c.b.a.c PTR laptop.hawaga.org.uk.
+
